@@ -1,0 +1,83 @@
+
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <div class="profileBegin">
+        <div class="profileHeader">
+            <h2>{{ profile_user.username }}'s Profile</h2>
+        
+            {% if user.is_authenticated and user.id != profile_user.id %}
+                <button id="follow-toggle-btn">
+                    {% if is_following %}
+                        Unfollow
+                    {% else %}
+                        Follow
+                    {% endif %}
+                </button>
+            {% endif %}
+        
+        </div>
+        <p>Followers: {{ followers }} | Following: {{ following }}</p>
+    </div>
+
+<hr>
+    
+    <h3>Posts</h3>
+    <div class="posts">
+        {% for post in posts %}
+            <div class="post">
+                <strong>{{ post.user.username }}</strong> said:
+                <p>{{ post.content }}</p>
+                <span>{{ post.timestamp }}</span>
+                
+                {% if user.is_authenticated %}
+                    <button class="like-btn" data-post-id="{{ post.id }}">
+                        <i class="fas fa-heart"></i> ({{ post.likes.count }})
+                    </button>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const followToggleBtn = document.querySelector('#follow-toggle-btn');
+            if (followToggleBtn) {
+                followToggleBtn.onclick = function() {
+                    fetch(`/follow_toggle/{{ profile_user.id }}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        alert(result.message);
+                        window.location.reload();
+                    });
+                };
+            }
+            
+            document.querySelectorAll('.like-btn').forEach(button => {
+                button.onclick = function() {
+                    const postId = this.dataset.postId;
+                    
+                    fetch(`/like_toggle/${postId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        alert(result.message);
+                        window.location.reload();
+                    });
+                };
+            });
+        });
+    </script>
+
+{% endblock %}

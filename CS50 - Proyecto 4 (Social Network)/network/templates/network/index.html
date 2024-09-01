@@ -1,0 +1,129 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+    <h2>All Posts</h2>
+    
+    {% if user.is_authenticated %}
+        <form id="create-post-form">
+            <textarea id="new-post-content" placeholder="What's on your mind?" required></textarea>
+            <button type="submit">Post</button>
+        </form>
+    {% endif %}
+    
+    <div class="posts">
+        {% for post in posts_of_the_page %}
+            <div class="post">
+                <div class="post-header">
+                    <strong><a href="{% url 'profile' user_id=post.user.id %}">{{ post.user.username }}</a></strong> said:
+                    
+                    <span class="timestamp">{{ post.timestamp }}</span>
+                </div>
+
+                <p class="post-content" data-post-id="{{ post.id }}">{{ post.content }}</p>
+                
+                <div class="post-footer">
+                    {% if user.is_authenticated %}
+                        <button class="like-btn" data-post-id="{{ post.id }}">
+                            <i class="fas fa-heart"></i> (<span class="like-count">{{ post.likes.count }}</span>)
+                        </button>
+                        {% if post.user == user %}
+                            <button class="edit-btn" data-post-id="{{ post.id }}">Edit</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="Pag">
+        <ul>
+            {% if posts_of_the_page.has_previous %}
+                <li class="pageBut"><a class="page-link" href="?page={{ posts_of_the_page.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            {% if posts_of_the_page.has_next %}
+                <li class="pageBut"><a class="page-link" href="?page={{ posts_of_the_page.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('#create-post-form').onsubmit = function(event) {
+                event.preventDefault();
+                const content = document.querySelector('#new-post-content').value;
+                
+                fetch('/create_post', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        content: content
+                    }),
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(result => {
+                    document.querySelector('#new-post-content').value = '';
+                    alert(result.message);
+                    window.location.reload();
+                });
+            };
+            
+            document.querySelectorAll('.like-btn').forEach(button => {
+                button.onclick = function() {
+                    const postId = this.dataset.postId;
+                    const likeCountElement = this.querySelector('.like-count');
+                    
+                    fetch(`/like_toggle/${postId}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        alert(result.message);
+                        // Update like count without reloading the page
+                        const currentCount = parseInt(likeCountElement.innerText);
+                        if (result.message.includes('removed')) {
+                            likeCountElement.innerText = currentCount - 1;
+                        } else {
+                            likeCountElement.innerText = currentCount + 1;
+                        }
+                    });
+                };
+            });
+            
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.onclick = function() {
+                    const postId = this.dataset.postId;
+                    const postContentElement = document.querySelector(`.post-content[data-post-id="${postId}"]`);
+                    const currentContent = postContentElement.innerText;
+                    
+                    const newContent = prompt("Edit your post:", currentContent);
+                    
+                    if (newContent) {
+                        fetch(`/edit_post/${postId}`, {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                content: newContent
+                            }),
+                            headers: {
+                                'X-CSRFToken': '{{ csrf_token }}',
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            alert(result.message);
+                            postContentElement.innerText = result.data; // Update the post content without reloading
+                        });
+                    }
+                };
+            });
+        });
+    </script>
+
+{% endblock %}
