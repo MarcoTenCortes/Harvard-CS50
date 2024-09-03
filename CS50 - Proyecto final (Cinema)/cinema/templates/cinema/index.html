@@ -1,0 +1,106 @@
+{% extends "cinema/layout.html" %}
+
+{% block title %}
+Home - Cinema
+{% endblock %}
+
+{% block body %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Welcome to Cinema</h1>
+    <p class="lead">Discover the latest movies and book your tickets now!</p>
+    <p></p>
+</div>
+
+<div class="principal">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Now Showing</h2>
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for movie in movies %}
+        {% if movie.is_released %}
+        <div class="col-md-4 screenCard">
+            <div class="card mb-4 shadow-sm fixed-card">
+                <img src="{{ movie.image_url }}" class="card-img-top clickable-image" alt="{{ movie.title }}" data-url="{% url 'movie_detail' movie.id %}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text description">{{ movie.description|truncatewords:20 }}</p>
+                    <p class="card-text"><strong>Genres:</strong>
+                        {% for genre in movie.genres.all %}
+                            {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <p class="card-text"><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+                    <p class="card-text"><strong>Price:</strong> ${{ movie.price }}</p>
+                    <a href="javascript:void(0);" class="toggle-description"><i class="fas fa-chevron-down"></i></a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    
+
+    
+
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Manejar el clic en la imagen para redirigir a la página de detalles
+    document.querySelectorAll(".clickable-image").forEach(function(img) {
+        img.addEventListener("click", function() {
+            window.location.href = img.getAttribute("data-url");
+        });
+    });
+
+    // Manejar el clic en el icono de flecha hacia abajo para alternar la descripción completa
+    document.querySelectorAll(".toggle-description").forEach(function(toggle) {
+        toggle.addEventListener("click", function() {
+            const cardBody = toggle.closest(".card-body");
+
+            if (cardBody.dataset.expanded === "true") {
+                // Restaurar el contenido original
+                cardBody.querySelectorAll(".card-text").forEach(function(textElement) {
+                    textElement.style.display = "";
+                });
+
+                // Eliminar la descripción completa que se añadió
+                const fullDescription = cardBody.querySelector(".full-description");
+                if (fullDescription) {
+                    fullDescription.remove();
+                }
+
+                // Cambiar el icono a una flecha hacia abajo
+                toggle.querySelector("i").classList.remove("fa-chevron-up");
+                toggle.querySelector("i").classList.add("fa-chevron-down");
+
+                // Marcar como no expandido
+                cardBody.dataset.expanded = "false";
+            } else {
+                // Ocultar el contenido actual
+                cardBody.querySelectorAll(".card-text").forEach(function(textElement) {
+                    textElement.style.display = "none";
+                });
+
+                // Crear y mostrar la descripción completa
+                const fullDescription = document.createElement("p");
+                fullDescription.className = "card-text full-description";
+                fullDescription.textContent = cardBody.querySelector(".description").textContent;
+                cardBody.appendChild(fullDescription);
+
+                // Cambiar el icono a una flecha hacia arriba
+                toggle.querySelector("i").classList.remove("fa-chevron-down");
+                toggle.querySelector("i").classList.add("fa-chevron-up");
+
+                // Marcar como expandido
+                cardBody.dataset.expanded = "true";
+            }
+        });
+    });
+});
+
+
+</script>
+{% endblock %}

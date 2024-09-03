@@ -1,0 +1,142 @@
+{% extends "cinema/layout.html" %}
+
+{% block title %}
+Book Ticket for {{ screening.movie.title }}
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Book Ticket for {{ screening.movie.title }}</h1>
+    <h3 class="text-center mb-4">Screening on {{ screening.date_time|date:"F j, Y, g:i a" }}</h3>
+
+    <div class="screen">PANTALLA</div> <!-- Representación de la pantalla -->
+    
+    <form method="POST">
+        {% csrf_token %}
+        {% load custom_tags %}
+
+        <div class="seat-selection">
+            {% for row in row_range %}
+            <div class="seat-row">
+                {% for seat_number in seat_range %}
+                    {% concat_row_as_letter_and_seat row seat_number as seat %}
+                    <div class="seat-container">
+                        {% if seat in special_seats %}
+                            <i class="fas fa-wheelchair seat special" data-seat="{{ seat }}"></i>
+                        {% elif seat in taken_seats %}
+                            <i class="fas fa-chair seat occupied" data-seat="{{ seat }}"></i>
+                        {% else %}
+                            <i class="fas fa-chair seat available" data-seat="{{ seat }}"></i>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+        
+        
+
+        <input type="hidden" id="selected_seats" name="seat_number">
+    </form>
+
+    <div id="purchase-panel" class="mt-5" style="display:none;">
+        <h4>Purchase Details</h4>
+        <p>Selected seat(s): <span id="seat-details"></span></p>
+        
+        <form method="POST" action="{% url 'complete_purchase' screening.id %}">
+            {% csrf_token %}
+            <input type="hidden" name="seat_number" id="final-seat-number">
+            
+            <div class="form-group">
+                <label for="card_number">Credit Card Number:</label>
+                <input type="text" class="form-control" id="card_number" name="card_number" required>
+            </div>
+            <div class="form-group">
+                <label for="card_expiration">Expiration Date (MM/YY):</label>
+                <input type="text" class="form-control" id="card_expiration" name="card_expiration" required>
+            </div>
+            <div class="form-group">
+                <label for="card_cvc">CVC:</label>
+                <input type="text" class="form-control" id="card_cvc" name="card_cvc" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Buy Now</button>
+        </form>
+    </div>
+    
+
+    <a href="{% url 'screenings' %}" class="btn btn-secondary mt-3">Back to Screenings</a>
+</div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    function adjustFooterMargin() {
+            const bodyHeight = document.body.scrollHeight;
+            const windowHeight =  window.innerHeight;
+            const footer = document.querySelector('footer');
+    
+            if (bodyHeight < windowHeight) {
+                const extraSpace = windowHeight - bodyHeight;
+                const currentMarginTop = parseFloat(window.getComputedStyle(footer).marginTop) || 0;
+                footer.style.marginTop = `${currentMarginTop + extraSpace}px`;
+            } else {
+                footer.style.marginTop = '0';  // Resetea el margen en caso de que la altura del cuerpo sea mayor
+            }
+        }
+    
+        adjustFooterMargin();
+        window.addEventListener('resize', adjustFooterMargin);
+    const seats = document.querySelectorAll('.seat.available');
+    const selectedSeatsInput = document.getElementById('selected_seats');
+    const finalSeatNumberInput = document.getElementById('final-seat-number');
+    const purchasePanel = document.getElementById('purchase-panel');
+    const seatDetails = document.getElementById('seat-details');
+    
+    let selectedSeats = [];
+
+    seats.forEach(seat => {
+        seat.addEventListener('click', function(event) {
+            const seatNumber = this.dataset.seat;
+
+            if (selectedSeats.includes(seatNumber)) {
+                selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+                this.classList.remove('selected');
+            } else {
+                selectedSeats.push(seatNumber);
+                this.classList.add('selected');
+            }
+            var check = "{{is_authenticated}}"
+            console.log(check)
+            if (check == "False") {
+                alert("You must be registered to purchase tickets. Please log in or sign up.");
+                window.location.href = "{% url 'login' %}";  
+                return;  
+            }
+
+            selectedSeatsInput.value = selectedSeats.join(',');
+            finalSeatNumberInput.value = selectedSeats.join(',');
+
+
+            console.log('Asientos seleccionados:', selectedSeatsInput.value);
+
+
+            seatDetails.textContent = selectedSeats.join(', ');
+
+            if (selectedSeats.length > 0) {
+                purchasePanel.style.display = 'block';
+            } else {
+                purchasePanel.style.display = 'none';
+            }
+
+            event.stopPropagation();
+        });
+    });
+});
+
+
+
+</script>
+
+{% endblock %}

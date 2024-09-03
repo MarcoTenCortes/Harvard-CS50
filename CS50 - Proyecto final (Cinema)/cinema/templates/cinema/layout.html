@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cinema{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'cinema/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a href="{% url 'index' %}" class="navbar-brand">Cinema</a>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="{% url 'upcoming_movies' %}" class="nav-link">Upcoming</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'screenings' %}" class="nav-link">Screenings</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'user_tickets' %}" class="nav-link">{{ user.username }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'register' %}" class="nav-link">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <body class="container main-content">
+        {% block body %}
+        <!-- Content for each page will be injected here -->
+        {% endblock %}
+    </body>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Cinema. All Rights Reserved.</p>
+            <p>Follow us on 
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function adjustFooterMargin() {
+            const bodyHeight = document.body.scrollHeight;
+            const windowHeight =  window.innerHeight;
+            const footer = document.querySelector('footer');
+    
+            if (bodyHeight < windowHeight) {
+                const extraSpace = windowHeight - bodyHeight;
+                const currentMarginTop = parseFloat(window.getComputedStyle(footer).marginTop) || 0;
+                footer.style.marginTop = `${currentMarginTop + extraSpace}px`;
+            } else {
+                footer.style.marginTop = '0';  // Resetea el margen en caso de que la altura del cuerpo sea mayor
+            }
+        }
+    
+        adjustFooterMargin();
+        window.addEventListener('resize', adjustFooterMargin);
+    });
+    </script>

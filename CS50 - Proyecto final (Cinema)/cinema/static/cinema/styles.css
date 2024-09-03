@@ -1,0 +1,400 @@
+/* styles.css */
+/* styles.css */
+
+/* Configuración básica de la página */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(180deg, #ffffff, #f2f2f2, #cccccc) !important;
+
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.principal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    border: 2px dashed #ccc;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+.col-md-12{
+    margin-bottom: 15px;
+    
+    background-color: #ecececea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.jumbotron {
+    background-image: url("https://t4.ftcdn.net/jpg/05/78/81/43/360_F_578814325_fWVzEwpOve95DN32k6C5X7uTgQzrpj3C.jpg");
+    background-size: cover; /* Resize the background image to cover the entire container */
+    background-position: center; /* Center the image */
+    color: #a4b6c9;
+    margin: 0px;
+}
+
+.col-md-12 h2 {
+    font-family: 'Poppins', sans-serif !important;
+
+    font-weight: 600;
+}
+
+.principal .row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.principal .col-md-4 {
+    display: flex;
+    justify-content: center;
+    
+}
+header, footer {
+    background-color: #222;
+    color: white;
+    padding: 10px 0;
+}
+
+
+
+.navbar-brand, .nav-link, .footer a {
+    color: white;
+    text-decoration: none;
+}
+
+.navbar-nav .nav-item {
+    margin-left: 20px;
+}
+
+.footer a:hover {
+    color: #ddd;
+}
+
+/* Estilos para las tarjetas */
+.fixed-card {
+    width: 300px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    margin-bottom: 20px;
+
+}
+
+.fixed-card .card-img-top {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.card-img-top-screening {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+}
+
+.fixed-card .card-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+
+    background-color: #f9f9f9;
+}
+
+
+
+.fixed-card .card-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.fixed-card .description {
+    font-size: 0.9rem;
+    color: #555;
+    flex-grow: 1;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.card-text {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+.toggle-description {
+    font-size: 0.8rem;
+    color: #007bff;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.full-description {
+    display: none;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Estilos para la selección de asientos */
+.seat-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    padding: 10px;
+}
+
+.row {
+    
+    border-radius: 0 0 10px 10px; /* Esquinas inferiores redondeadas */
+}
+
+.col-md-4 {
+    margin-bottom: 30px;
+    
+}
+
+.upcomingCard {
+    height: 750px;
+}
+
+.upcomingImg {
+    height: 500px;
+}
+.card:hover {
+    transform: scale(1.02);
+}
+
+.seat-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.seat {
+    font-size: 1.5rem;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.seat.available {
+    color: #4caf50;
+}
+
+.seat.occupied {
+    color: #f44336;
+    cursor: not-allowed;
+}
+
+.seat.selected {
+    color: #007bff;
+}
+
+.seat.special {
+    color: #0d47a1;
+}
+
+.seat.disabled {
+    color: #b3b3b3;
+    cursor: not-allowed;
+}
+
+.screen {
+    margin: 20px 0;
+    width: 100%;
+    height: 40px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+}
+
+/* Media Queries para mejor adaptabilidad */
+@media (max-width: 768px) {
+    .fixed-card {
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .fixed-card .card-img-top {
+        height: 150px;
+    }
+}
+
+/* Añadir esto al final del archivo */
+.clickable-image {
+    cursor: pointer;
+}
+
+.toggle-description {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute; /* Coloca el icono en una posición fija dentro del contenedor */
+    top: 93%;  /* Centra el icono verticalmente */
+    left: 50%; /* Centra el icono horizontalmente */
+}
+
+.full-description {
+    display: none;
+}
+/* Estilo para mostrar la descripción completa */
+.full-description {
+    display: block;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+}
+
+.ticket-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.ticket-title {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 2.5rem;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.ticket-row {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ticket-card {
+    display: flex;
+    background-color: #f7f7f7;
+    border: 2px dashed #ccc;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 700px;
+    height: 250px; /* Altura fija para los tickets */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    margin: 0 auto; /* Centra los tickets horizontalmente */
+}
+
+.ticket-card-inner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+}
+
+.ticket-card:hover {
+    transform: scale(1.02);
+}
+
+.ticket-img {
+    width: 40%;
+    height: 100%;
+    object-fit: cover;
+    border-right: 2px solid #ccc;
+    border-radius: 15px 0 0 15px;
+}
+
+.ticket-details {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 60%;
+}
+
+.ticket-movie-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #ff5722;
+}
+
+.ticket-info {
+    font-size: 1rem;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.ticket-purchase-date {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 10px;
+}
+
+.ticket-refund-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #d9534f;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    align-self: flex-start;
+}
+
+.ticket-refund-btn:hover {
+    background-color: #c9302c;
+}
+
+.no-tickets {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* Animación slide-out-bl */
+/* Animación hide */
+@keyframes hide {
+    0% {
+        opacity: 1;
+        margin-bottom: 0px;
+    }
+    75% {
+        opacity: 0;
+
+        margin-bottom: 5px;
+    }
+    100% {
+        opacity: 0;
+        height: 0;
+        padding: 0px;
+        margin-bottom: 0px;
+    }
+}
+
+.ticket-card {
+    margin-bottom: 20px;
+    overflow: hidden;
+    animation-name: hide;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
+
+}

@@ -1,0 +1,44 @@
+{% extends 'cinema/layout.html' %}
+
+{% block title %}{{ movie.title }}{% endblock %}
+
+{% block body %}
+<div class="movie-detail">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{ movie.image_url }}" alt="{{ movie.title }} poster" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+            <h1>{{ movie.title }}</h1>
+            <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+            <p><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+            <p><strong>Genres:</strong> 
+                {% for genre in movie.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p><strong>Description:</strong></p>
+            <p>{{ movie.description }}</p>
+            {% if movie.price %}
+            <p><strong>Price:</strong> ${{ movie.price }}</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Screenings</h2>
+    <ul class="list-group">
+        {% for screening in movie.screenings.all %}
+        <li class="list-group-item">
+            <p><strong>Date & Time:</strong> {{ screening.date_time }}</p>
+            <p><strong>Auditorium:</strong> {{ screening.auditorium }}</p>
+            <a href="{% url 'book_ticket' screening.id %}" class="btn btn-success">Buy Ticket for this Screening</a>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No screenings available.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

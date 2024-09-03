@@ -1,0 +1,32 @@
+{% extends "cinema/layout.html" %}
+
+{% block title %}
+Movies
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Movies</h1>
+
+    {% for genre in genres %}
+        <div class="genre-section mb-5">
+            <h2 class="text-center">{{ genre.name }}</h2>
+            <div class="row">
+                {% for movie in genre.movies.all %}
+                <div class="col-md-4">
+                    <a href="{% url 'movie_detail' movie.id %}" class="card mb-4 shadow-sm h-100 text-decoration-none text-dark">
+                        <img src="{{ movie.image_url }}" class="card-img-top" alt="{{ movie.title }}">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ movie.title }}</h5>
+                            <p class="card-text">{{ movie.description|truncatewords:20 }}</p>
+                            <p class="card-text"><strong>Release Date:</strong> {{ movie.release_date|date:"F j, Y" }}</p>
+                            <p class="card-text"><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

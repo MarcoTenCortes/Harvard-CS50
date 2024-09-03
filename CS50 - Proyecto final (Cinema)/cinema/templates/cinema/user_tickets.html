@@ -1,0 +1,103 @@
+{% extends "cinema/layout.html" %}
+
+{% block title %}
+My Tickets
+{% endblock %}
+
+{% block body %}
+<div class="ticket-container my-5">
+    <h1 class="text-center ticket-title mb-4">My Tickets</h1>
+    {% if tickets %}
+        <div class="ticket-row">
+            {% for ticket in tickets %}
+            <div class="ticket-card mb-4">
+                <div class="ticket-card-inner">
+                    {% if ticket.screening.movie.image_url %}
+                        <img src="{{ ticket.screening.movie.image_url }}" class="ticket-img" alt="{{ ticket.screening.movie.title }}">
+                    {% endif %}
+                    <div class="ticket-details">
+                        <h5 class="ticket-movie-title">{{ ticket.screening.movie.title }}</h5>
+                        <p class="ticket-info"><strong>Date:</strong> {{ ticket.screening.date_time|date:"F j, Y, g:i a" }}</p>
+                        <p class="ticket-info"><strong>Auditorium:</strong> {{ ticket.screening.auditorium }}</p>
+                        <p class="ticket-info"><strong>Seat:</strong> {{ ticket.seat_number }}</p>
+                        <small class="ticket-purchase-date">Purchased on {{ ticket.purchase_date|date:"F j, Y, g:i a" }}</small>
+                        <button class="ticket-refund-btn" data-ticket-id="{{ ticket.id }}">Refund</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <p class="text-center no-tickets" {% if tickets %} style="display:none;" {% endif %}>You have no reserved tickets.</p>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const check = document.body.scrollHeight < window.innerHeight;
+    function adjustFooterMargin() {
+        const bodyHeight = document.body.scrollHeight;
+        const windowHeight = window.innerHeight;
+        const footer = document.querySelector('footer');
+        
+        if (bodyHeight < windowHeight) {
+            const extraSpace = windowHeight - bodyHeight;
+            const currentMarginTop = parseFloat(window.getComputedStyle(footer).marginTop) || 0;
+            footer.style.marginTop = `${currentMarginTop + extraSpace}px`;
+        } else {
+            footer.style.marginTop = '0';
+        }
+    }
+
+    function checkNoTickets() {
+        const ticketCards = document.querySelectorAll('.ticket-card');
+        console.log(ticketCards.length-1)
+        const noTicketsMessage = document.querySelector('.no-tickets');
+        if (ticketCards.length-1 === 0) {
+            noTicketsMessage.style.display = 'block';
+        }
+    }
+
+    adjustFooterMargin();
+    window.addEventListener('resize', adjustFooterMargin);
+
+    const refundButtons = document.querySelectorAll('.ticket-refund-btn');
+
+    refundButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const ticketId = this.getAttribute('data-ticket-id');
+            const ticketCard = this.closest('.ticket-card');
+
+            if (confirm('Your refund will be processed in the next few days. Do you want to proceed?')) {
+                fetch(`/refund_ticket/${ticketId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ticket_id: ticketId })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        
+                        if (check) {
+                            ticketCard.style.visibility = 'hidden';
+                        } else {
+                            ticketCard.style.animationPlayState = 'running';
+                            ticketCard.addEventListener('animationend', () => {
+                                ticketCard.remove();
+                                adjustFooterMargin();
+                                checkNoTickets();
+                            });
+                        }
+                    } else {
+                        alert('There was an error processing your refund.');
+                    }
+                    checkNoTickets();
+                });
+            }
+        });
+    });
+
+  
+});
+</script>
+{% endblock %}

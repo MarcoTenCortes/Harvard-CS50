@@ -1,0 +1,51 @@
+{% extends "cinema/layout.html" %}
+
+{% block title %}
+Upcoming Movies
+{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+    <h1 class="text-center mb-4">Upcoming Movies</h1>
+    <div class="row">
+        {% for movie in upcoming_movies %}
+        <div class="col-md-4 upcomingCard">
+            <div class="card mb-4 shadow-sm h-100 text-decoration-none text-dark">
+                <a href="{% url 'movie_detail' movie.id %}">
+                    <img src="{{ movie.image_url }}" class="card-img-top upcomingImg" alt="{{ movie.title }}">
+                </a>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                    <p class="card-text">{{ movie.description|truncatewords:20 }}</p>
+                    <p class="card-text"><strong>Release Date:</strong> {{ movie.release_date|date:"F j, Y" }}</p>
+                    <p class="card-text"><strong>Duration:</strong> {{ movie.duration }} minutes</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        function adjustFooterMargin() {
+            const bodyHeight = document.body.scrollHeight;
+            const windowHeight =  window.innerHeight;
+            const footer = document.querySelector('footer');
+    
+            if (bodyHeight < windowHeight) {
+                const extraSpace = windowHeight - bodyHeight;
+                const currentMarginTop = parseFloat(window.getComputedStyle(footer).marginTop) || 0;
+                footer.style.marginTop = `${currentMarginTop + extraSpace}px`;
+            } else {
+                footer.style.marginTop = '0';  // Resetea el margen en caso de que la altura del cuerpo sea mayor
+            }
+        }
+    
+        adjustFooterMargin();
+        window.addEventListener('resize', adjustFooterMargin);
+    });
+    </script>
+    
+    
+{% endblock %}
