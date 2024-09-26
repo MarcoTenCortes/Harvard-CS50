@@ -20,3 +20,11 @@ Este proyecto fue desarrollado utilizando las siguientes tecnologías:
 - **Framework Backend**: Django
 - **API**: OMDb API para la obtención de datos sobre las películas
 - **Base de Datos**: SQLite (para el almacenamiento local de información del usuario y películas favoritas)
+- 
+## Autor ✍️
+
+Este proyecto fue desarrollado por **Marco Tenorio Cortes** como parte del curso **CS50 de Harvard**. Si tienes alguna pregunta o sugerencia, no dudes en contactarme a través de [mi perfil de GitHub](https://github.com/MarcoTenCortes).
+
+---
+
+¡Gracias por visitar este proyecto! 🎉
