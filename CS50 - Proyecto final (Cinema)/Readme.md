@@ -2,7 +2,7 @@
 
 Este repositorio contiene el código fuente del proyecto **Cinema**, desarrollado como parte del curso **CS50 de Harvard**. El objetivo de este proyecto es crear una aplicación web para la gestión y visualización de información sobre películas, utilizando una API de terceros y proporcionando una interfaz amigable para los usuarios.
 
-Puedes visualizar una demo de la página en https://cinema.mtcor.es
+Puedes visualizar una demo de la página en https://cinema.mtcor.es.
 
 ## Descripción del Proyecto 📖
 
