@@ -4,7 +4,7 @@ Este repositorio contiene el código fuente del proyecto **Cinema**, desarrollad
 
 ## Descripción del Proyecto 📖
 
-**Cinema** es una aplicación web que permite a los usuarios buscar información sobre películas, incluyendo detalles como el título, sinopsis, año de lanzamiento, y puntuaciones. Utiliza la API de [OMDb](http://www.omdbapi.com/) para obtener los datos de las películas, y está construida utilizando Python con el microframework Flask.
+**Cinema** es una aplicación web que permite a los usuarios buscar información sobre películas, incluyendo detalles como el título, sinopsis, año de lanzamiento, y puntuaciones. Está construida utilizando Python con el franework DJango.
 
 ### Funcionalidades principales
 
